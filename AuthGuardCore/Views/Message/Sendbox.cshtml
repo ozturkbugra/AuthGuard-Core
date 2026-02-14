@@ -1,6 +1,6 @@
 ﻿@model List<Message>
 @{
-    ViewData["Title"] = "Inbox";
+    ViewData["Title"] = "Sendbox";
     Layout = "~/Views/UserLayout/Index.cshtml";
 }
 
@@ -40,7 +40,7 @@
                                         <td class="">
                                             <label><input type="checkbox" class="i-checks"></label>
                                         </td>
-                                        <td><a href="#">Gönderici</a> <span class="label label-warning">@item.Category.Name</span></td>
+                                        <td><a href="#">Alıcı</a> <span class="label label-warning">@item.Category.Name</span></td>
                                         <td>
                                             <a href="#">
                                                 <strong>Konu:</strong>

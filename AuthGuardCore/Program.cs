@@ -1,4 +1,6 @@
 using AuthGuardCore.Context;
+using AuthGuardCore.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +9,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AuthGuardCoreContext>(options =>
     options.UseSqlServer(connectionString));
+
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<AuthGuardCoreContext>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

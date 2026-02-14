@@ -9,10 +9,10 @@ namespace AuthGuardCore.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
 
-        //public RegisterController(UserManager<AppUser> userManager)
-        //{
-        //    _userManager = userManager;
-        //}
+        public RegisterController(UserManager<AppUser> userManager)
+        {
+            _userManager = userManager;
+        }
 
         public IActionResult Index()
         {

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model LoginUserViewModel
+@{
     Layout = null;
 }
 <!DOCTYPE html>
@@ -42,18 +43,18 @@
 
 					<div class="wrap-input100 validate-input m-b-23">
 						<span class="label-input100">Kullanıcı Adı</span>
-						<input class="input100" type="text"  placeholder="Kullanıcı Adı">
+						<input class="input100" type="text" asp-for="UserName" placeholder="Kullanıcı Adı">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input">
 						<span class="label-input100">Parola</span>
-						<input class="input100" type="password" placeholder="Parolanız">
+						<input class="input100" type="password" asp-for="Password" placeholder="Parolanız">
 						<span class="focus-input100" data-symbol="&#xf190;"></span>
 					</div>
 
 					<div class="text-right p-t-8 p-b-31">
-						<a href="#">
+						<a href="/UserPassword/ForgotMyPassword">
 							Şifreni mi unuttun?
 						</a>
 					</div>

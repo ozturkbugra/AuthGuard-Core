@@ -9,5 +9,8 @@ namespace AuthGuardCore.Context
         public AuthGuardCoreContext(DbContextOptions<AuthGuardCoreContext> options) : base(options)
         {
         }
+
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Message> Messages { get; set; }
     }
 }

@@ -35,7 +35,7 @@
 						<input type="email" asp-for="Email" class="input-text" placeholder="Mail Adresiniz">
 					</div>
 					<div class="form-row">
-						<input type="text" asp-for="Email" class="input-text" placeholder="Kullanıcı adınız">
+						<input type="text" asp-for="UserName" class="input-text" placeholder="Kullanıcı adınız">
 					</div>
 				</div>
 				<div class="form-row-total">
@@ -46,6 +46,9 @@
 					<div class="form-row">
 						<input type="password" asp-for="ConfirmPassword" class="input-text" placeholder="Şifrenizi Onaylayınız">
 					</div>
+				</div>
+				<div class="text-danger" asp-validation-summary="ModelOnly">
+
 				</div>
 				<div class="form-row-last">
 					<input type="submit" class="register" value="Kayıt Ol">

@@ -1,5 +1,6 @@
 using AuthGuardCore.Context;
 using AuthGuardCore.Entities;
+using AuthGuardCore.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +12,8 @@ builder.Services.AddDbContext<AuthGuardCoreContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
-    .AddEntityFrameworkStores<AuthGuardCoreContext>();
+    .AddEntityFrameworkStores<AuthGuardCoreContext>()
+    .AddErrorDescriber<CustomIdentityValidator>();
 
 
 // Add services to the container.

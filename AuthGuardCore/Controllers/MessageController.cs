@@ -31,5 +31,10 @@ namespace AuthGuardCore.Controllers
             var value = await _context.Messages.FirstOrDefaultAsync(x=> x.MessageID == 1);
             return View(value);
         }
+
+        public async Task<IActionResult> CreateMessage()
+        {
+            return View();
+        }
     }
 }

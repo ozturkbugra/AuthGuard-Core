@@ -1,5 +1,6 @@
 using AuthGuardCore.Context;
 using AuthGuardCore.Entities;
+using AuthGuardCore.Interfaces;
 using AuthGuardCore.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,10 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthGuardCoreContext>()
     .AddErrorDescriber<CustomIdentityValidator>();
 
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

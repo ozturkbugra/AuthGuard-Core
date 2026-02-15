@@ -15,6 +15,6 @@ namespace AuthGuardCore.Controllers
             return RedirectToAction("Index", "Login");
         }
 
-
+        //ohhy wyjd hpbe oewl
     }
 }

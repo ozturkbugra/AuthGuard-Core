@@ -51,6 +51,8 @@ namespace AuthGuardCore.Controllers
                     $"Hesabınızı doğrulamak için aktivasyon kodu: {code}"
                 );
 
+                TempData["ConfirmEmail"] = model.Email;
+
                 return RedirectToAction("UserActivation", "Activation");
             }
             else

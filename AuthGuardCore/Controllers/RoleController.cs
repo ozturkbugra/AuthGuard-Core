@@ -71,5 +71,66 @@ namespace AuthGuardCore.Controllers
             await _roleManager.CreateAsync(role);
             return RedirectToAction("RoleList");
         }
+
+
+        public async Task<IActionResult> UserList()
+        {
+            var values = await _userManager.Users.ToListAsync();
+            return View(values);
+        }
+
+        public async Task<IActionResult> AssignRole(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
+
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+                return NotFound();
+
+            var roles = await _roleManager.Roles.ToListAsync();
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var model = new UserRoleAssignViewModel
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                Roles = roles.Select(r => new RoleAssignItemViewModel
+                {
+                    RoleID = r.Id,
+                    RoleName = r.Name,
+                    RoleExist = userRoles.Contains(r.Name)
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignRole(UserRoleAssignViewModel model)
+        {
+            var user = await _userManager.FindByIdAsync(model.UserId);
+
+            if (user == null)
+                return NotFound();
+
+            foreach (var role in model.Roles)
+            {
+                if (role.RoleExist)
+                {
+                    if (!await _userManager.IsInRoleAsync(user, role.RoleName))
+                        await _userManager.AddToRoleAsync(user, role.RoleName);
+                }
+                else
+                {
+                    if (await _userManager.IsInRoleAsync(user, role.RoleName))
+                        await _userManager.RemoveFromRoleAsync(user, role.RoleName);
+                }
+            }
+
+            return RedirectToAction("UserList");
+        }
+
     }
 }

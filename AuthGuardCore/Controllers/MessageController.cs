@@ -41,7 +41,16 @@ namespace AuthGuardCore.Controllers
 
         public async Task<IActionResult> Sendbox()
         {
-            var values = await _context.Messages.Where(x => x.SenderEmail == "ztrk1212@gmail.com").ToListAsync();
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            if (user == null)
+                return RedirectToAction("Login", "Account");
+
+            var values = await _context.Messages
+                .Where(m => m.SenderEmail == user.Email)
+                .ProjectTo<MessageWithReceiverInfoViewModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
             return View(values);
         }
 

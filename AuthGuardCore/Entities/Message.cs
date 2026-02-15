@@ -19,6 +19,7 @@
 
         public Category Category { get; set; }
 
-
+        public AppUser Sender { get; set; }
+        public AppUser Receiver { get; set; }
     }
 }

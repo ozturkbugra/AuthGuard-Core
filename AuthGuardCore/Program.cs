@@ -22,6 +22,9 @@ builder.Services.Configure<EmailSettings>(
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+builder.Services.AddAutoMapper(typeof(Program));
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

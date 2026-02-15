@@ -5,6 +5,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthGuardCore.Controllers
@@ -33,6 +34,7 @@ namespace AuthGuardCore.Controllers
             var values = await _context.Messages
                 .Where(m => m.RecieverEmail == user.Email)
                 .ProjectTo<MessageWithSenderInfoViewModel>(_mapper.ConfigurationProvider)
+                .OrderByDescending(x => x.SendDate).ThenByDescending(x => x.MessageID)
                 .ToListAsync();
 
             return View(values);
@@ -49,6 +51,7 @@ namespace AuthGuardCore.Controllers
             var values = await _context.Messages
                 .Where(m => m.SenderEmail == user.Email)
                 .ProjectTo<MessageWithReceiverInfoViewModel>(_mapper.ConfigurationProvider)
+                .OrderByDescending(x=> x.SendDate).ThenByDescending(x=> x.MessageID)
                 .ToListAsync();
 
             return View(values);
@@ -62,7 +65,77 @@ namespace AuthGuardCore.Controllers
 
         public async Task<IActionResult> CreateMessage()
         {
-            return View();
+            var model = new CreateMessageViewModel();
+
+            model.Categories = await _context.Categories
+                .Where(x => x.Status) // aktif kategoriler
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.CategoryID.ToString()
+                }).ToListAsync();
+
+            return View(model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateMessage(CreateMessageViewModel model)
+        {
+            var sender = await _userManager.GetUserAsync(User);
+
+            if (sender == null)
+                return RedirectToAction("Login", "Account");
+
+            if (!ModelState.IsValid)
+            {
+                // Kategorileri tekrar doldurma kodu
+                model.Categories = await _context.Categories
+                    .Where(x => x.Status)
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.CategoryID.ToString()
+                    }).ToListAsync();
+
+                return View(model);
+            }
+
+            // Alıcı var mı kontrolü
+            var receiver = await _userManager.FindByEmailAsync(model.ReceiverEmail);
+
+            if (receiver == null)
+            {
+                ModelState.AddModelError("ReceiverEmail", "Bu mail adresine ait kullanıcı bulunamadı.");
+
+                model.Categories = await _context.Categories
+                    .Where(x => x.Status)
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.CategoryID.ToString()
+                    }).ToListAsync();
+
+                return View(model);
+            }
+
+            var message = new Message
+            {
+                SenderEmail = sender.Email,
+                RecieverEmail = receiver.Email,
+                Subject = model.Subject,
+                MessageDetail = model.MessageDetail,
+                CategoryID = model.CategoryID,
+                SendDate = DateTime.Now,
+                IsRead = false
+            };
+
+            _context.Messages.Add(message);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("SendBox");
+        }
+
+
+
     }
 }

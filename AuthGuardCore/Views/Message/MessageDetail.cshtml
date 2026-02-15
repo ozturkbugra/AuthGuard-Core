@@ -51,7 +51,7 @@
                         <p class="last-ph"><b>Tarih:</b> @Model.SendDate.ToString("dd/MM/yyyy HH:mm")</p>
                     </div>
                     <div class="view-mail-atn">
-                       <p>@Model.MessageDetail</p>
+                       <p>@Html.Raw(Model.MessageDetail)</p>
                     </div>
                  
                     <div class="vw-ml-action-ls text-right mg-t-20">

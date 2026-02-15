@@ -38,7 +38,7 @@ namespace AuthGuardCore.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, true);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Profile", "MyProfile");
+                    return RedirectToAction("Inbox", "Message");
                 }
                 return View();
             }

@@ -54,9 +54,9 @@ namespace AuthGuardCore.Controllers
             return View(values);
         }
 
-        public async Task<IActionResult> MessageDetail()
+        public async Task<IActionResult> MessageDetail(int id)
         {
-            var value = await _context.Messages.FirstOrDefaultAsync(x=> x.MessageID == 1);
+            var value = await _context.Messages.FirstOrDefaultAsync(x=> x.MessageID == id);
             return View(value);
         }
 

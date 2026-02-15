@@ -2,6 +2,7 @@
 using AuthGuardCore.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthGuardCore.Controllers
 {
@@ -14,6 +15,12 @@ namespace AuthGuardCore.Controllers
         {
             _roleManager = roleManager;
             _userManager = userManager;
+        }
+
+        public async Task<IActionResult> RoleList()
+        {
+            var values = await _roleManager.Roles.ToListAsync();
+            return View(values);
         }
 
         public async Task<IActionResult> CreateRole()

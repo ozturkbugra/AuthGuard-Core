@@ -25,5 +25,11 @@ namespace AuthGuardCore.Controllers
             var values = await _context.Messages.Where(x => x.SenderEmail == "ztrk1212@gmail.com").ToListAsync();
             return View(values);
         }
+
+        public async Task<IActionResult> MessageDetail()
+        {
+            var value = await _context.Messages.FirstOrDefaultAsync(x=> x.MessageID == 1);
+            return View(value);
+        }
     }
 }

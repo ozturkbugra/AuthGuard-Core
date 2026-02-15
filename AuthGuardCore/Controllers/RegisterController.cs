@@ -22,12 +22,16 @@ namespace AuthGuardCore.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(RegisterUserViewModel model)
         {
+            Random random = new();
+            int code = random.Next(100000, 1000000);
+
             AppUser appUser = new()
             {
                 Name = model.Name,
                 Email = model.Email,
                 Surname = model.SurName,
                 UserName = model.UserName,
+                ActivationCode = code,
             };
 
 
@@ -35,7 +39,7 @@ namespace AuthGuardCore.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Login");
+                return RedirectToAction("UserActivation", "Activation");
             }
             else
             {

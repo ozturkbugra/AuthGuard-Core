@@ -14,7 +14,8 @@ builder.Services.AddDbContext<AuthGuardCoreContext>(options =>
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthGuardCoreContext>()
-    .AddErrorDescriber<CustomIdentityValidator>();
+    .AddErrorDescriber<CustomIdentityValidator>()
+    .AddDefaultTokenProviders();
 
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));

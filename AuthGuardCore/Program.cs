@@ -2,8 +2,12 @@ using AuthGuardCore.Context;
 using AuthGuardCore.Entities;
 using AuthGuardCore.Interfaces;
 using AuthGuardCore.Models;
+using AuthGuardCore.Models.JwtModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +28,25 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // yetkisiz sayfalarda 401 dönecek
+
+}).AddJwtBearer(opt =>
+{
+    var jwtSettings = builder.Configuration.GetSection("JwtSettingsKey").Get<JwtSettingsModel>();
+    opt.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings.Issuer,
+        ValidAudience = jwtSettings.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
+    };
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

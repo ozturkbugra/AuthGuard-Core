@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthGuardCore.Controllers
 {
-    [Authorize]
     public class MessageController : Controller
     {
         private readonly AuthGuardCoreContext _context;

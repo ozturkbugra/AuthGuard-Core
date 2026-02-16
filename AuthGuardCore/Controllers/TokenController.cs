@@ -1,5 +1,6 @@
 ﻿using AuthGuardCore.Models.JwtModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,9 +12,9 @@ namespace AuthGuardCore.Controllers
     {
         private readonly JwtSettingsModel _jwtSettingsModel;
 
-        public TokenController(JwtSettingsModel jwtSettingsModel)
+        public TokenController(IOptions<JwtSettingsModel> JwtSettingsModel)
         {
-            _jwtSettingsModel = jwtSettingsModel;
+            _jwtSettingsModel = JwtSettingsModel.Value;
         }
 
         public IActionResult Generate()

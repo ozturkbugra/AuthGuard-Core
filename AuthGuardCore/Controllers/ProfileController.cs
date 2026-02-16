@@ -1,11 +1,13 @@
 ﻿using AuthGuardCore.Entities;
 using AuthGuardCore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 
 namespace AuthGuardCore.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly UserManager<AppUser> _userManager;

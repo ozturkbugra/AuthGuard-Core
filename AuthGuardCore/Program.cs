@@ -21,6 +21,12 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddErrorDescriber<CustomIdentityValidator>()
     .AddDefaultTokenProviders();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Login";
+    options.AccessDeniedPath = "/Error/403";
+});
+
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
 
@@ -28,41 +34,39 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
+builder.Services.Configure<JwtSettingsModel>(
+    builder.Configuration.GetSection("JwtSettingsKey"));
 
-builder.Services.Configure<JwtSettingsModel>(builder.Configuration.GetSection("JwtSettingsKey"));
 
-builder.Services.AddAuthentication(opt =>
-{
-    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
-    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // yetkisiz sayfalarda 401 dönecek
-
-}).AddJwtBearer(opt =>
-{
-    var jwtSettings = builder.Configuration.GetSection("JwtSettingsKey").Get<JwtSettingsModel>();
-    opt.TokenValidationParameters = new TokenValidationParameters
+builder.Services.AddAuthentication()
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings.Issuer,
-        ValidAudience = jwtSettings.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
-    };
-});
+        var jwtSettings = builder.Configuration
+            .GetSection("JwtSettingsKey")
+            .Get<JwtSettingsModel>();
 
-// Add services to the container.
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtSettings.Key))
+        };
+    });
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -70,7 +74,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();
+
+app.UseAuthentication();  
 app.UseAuthorization();
 
 app.MapControllerRoute(

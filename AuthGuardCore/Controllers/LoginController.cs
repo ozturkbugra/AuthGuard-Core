@@ -24,7 +24,7 @@ namespace AuthGuardCore.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Index(LoginUserViewModel model)
-        {
+        {   
             var value = _context.Users.FirstOrDefault(x=> x.UserName == model.UserName);
 
             if(value == null)

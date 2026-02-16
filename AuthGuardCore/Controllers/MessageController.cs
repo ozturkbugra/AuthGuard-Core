@@ -11,13 +11,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthGuardCore.Controllers
 {
+    [Authorize]
     public class MessageController : Controller
     {
         private readonly AuthGuardCoreContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
 
-
+        
         public MessageController(AuthGuardCoreContext context, UserManager<AppUser> userManager, IMapper mapper)
         {
             _context = context;

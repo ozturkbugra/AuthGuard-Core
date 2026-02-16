@@ -3,6 +3,7 @@ using AuthGuardCore.Entities;
 using AuthGuardCore.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthGuardCore.Controllers
 {
+    [Authorize]
     public class MessageController : Controller
     {
         private readonly AuthGuardCoreContext _context;
@@ -26,8 +28,15 @@ namespace AuthGuardCore.Controllers
 
         public async Task<IActionResult> Inbox()
         {
+
+            if (User.Identity.Name == null)
+            {
+                return NotFound();
+            }
+
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
+           
             if (user == null)
                 return RedirectToAction("Login", "Account");
 

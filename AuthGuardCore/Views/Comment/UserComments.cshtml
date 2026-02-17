@@ -15,7 +15,6 @@
                         <h2>Rol Listeleri</h2>
                     </div>
                     <br />
-                    <a href="/Role/CreateRole" class="btn btn-success"> Rol Ekle</a>
                     <div class="row mt-5">
 
                         @foreach (var item in Model)
@@ -33,6 +32,7 @@
             </div>
         </div>
 
+        @await Html.PartialAsync("CreateComment","Comment")
     </div>
 </div>
 

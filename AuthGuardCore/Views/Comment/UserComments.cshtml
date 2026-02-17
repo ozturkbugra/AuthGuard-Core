@@ -1,0 +1,38 @@
+﻿@model List<Comment>
+@{
+    ViewData["Title"] = "UserComments";
+    Layout = "~/Views/UserLayout/Index.cshtml";
+    int id = 1;
+}
+
+
+<div class="form-element-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-element-list">
+                    <div class="basic-tb-hd">
+                        <h2>Rol Listeleri</h2>
+                    </div>
+                    <br />
+                    <a href="/Role/CreateRole" class="btn btn-success"> Rol Ekle</a>
+                    <div class="row mt-5">
+
+                        @foreach (var item in Model)
+                        {
+                            var name = item.AppUser.Name + " " + item.AppUser.Surname + " - " + item.Date.ToString("dd/MM/yyyy HH:mm");
+
+                            <b> @name </b>
+                            <br />
+                            <p>@item.Text</p>
+                            <hr />
+                        }
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

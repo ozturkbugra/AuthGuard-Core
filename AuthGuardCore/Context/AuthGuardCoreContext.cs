@@ -13,6 +13,7 @@ namespace AuthGuardCore.Context
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

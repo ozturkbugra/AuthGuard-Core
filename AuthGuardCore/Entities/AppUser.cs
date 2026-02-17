@@ -10,5 +10,7 @@ namespace AuthGuardCore.Entities
         public string? City { get; set; }
         public int? ActivationCode { get; set; }
 
+        public List<Comment> Comments { get; set; }
+
     }
 }

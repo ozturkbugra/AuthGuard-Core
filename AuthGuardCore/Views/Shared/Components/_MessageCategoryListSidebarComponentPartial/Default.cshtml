@@ -4,7 +4,7 @@
     <ul class="inbox-st-nav">
         @foreach (var item in Model)
         {
-            <li><a href="#"><i class="@item.IconUrl"></i> @item.Name</a></li>
+            <li><a href="/Message/GetMessageListByCategory/@item.CategoryID"><i class="@item.IconUrl"></i> @item.Name</a></li>
 
         }
     </ul>

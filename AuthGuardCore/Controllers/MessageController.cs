@@ -145,6 +145,22 @@ namespace AuthGuardCore.Controllers
         }
 
 
+        public async Task<IActionResult> GetMessageListByCategory(int id)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+
+            if (user == null)
+                return RedirectToAction("Login", "Account");
+
+            var values = await _context.Messages
+                .Where(m => m.RecieverEmail == user.Email && m.CategoryID == id)
+                .ProjectTo<MessageWithSenderInfoViewModel>(_mapper.ConfigurationProvider)
+                .OrderByDescending(x => x.SendDate).ThenByDescending(x => x.MessageID)
+                .ToListAsync();
+
+            return View(values);
+        }
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AuthGuardCore.Context;
 using AuthGuardCore.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace AuthGuardCore.Controllers
             return View(values);
         }
 
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> UserCommentList()
         {
             var values = await _context.Comments.Include(x => x.AppUser).ToListAsync(); 

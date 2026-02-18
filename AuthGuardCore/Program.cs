@@ -39,6 +39,7 @@ builder.Services.Configure<JwtSettingsModel>(
 
 
 builder.Services.AddAuthentication()
+    // JWT (API için)
     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
         var jwtSettings = builder.Configuration
@@ -56,6 +57,13 @@ builder.Services.AddAuthentication()
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtSettings.Key))
         };
+    })
+
+    // Google External Login (Web için - Cookie ile çalışır)
+    .AddGoogle(options =>
+    {
+        options.ClientId = "Google client id";
+        options.ClientSecret = "Google client secret";
     });
 
 builder.Services.AddControllersWithViews();

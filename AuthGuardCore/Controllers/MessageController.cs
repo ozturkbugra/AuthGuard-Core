@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace AuthGuardCore.Controllers
 {
-    [Authorize]
     public class MessageController : Controller
     {
         private readonly AuthGuardCoreContext _context;
@@ -26,8 +26,36 @@ namespace AuthGuardCore.Controllers
             _mapper = mapper;
         }
 
+        [Authorize]
         public async Task<IActionResult> Inbox()
         {
+
+            var token = Request.Cookies["jwtToken"];
+
+            if (token == null)
+            {
+                return NotFound();
+            }
+
+            JwtSecurityToken jwt;
+
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                jwt = handler.ReadJwtToken(token);
+            }
+            catch 
+            {
+                return NotFound();
+            }
+
+            var city = jwt.Claims.FirstOrDefault(c=> c.Type == "city")?.Value;
+
+            if(city != "Ankara")
+            {
+                return Forbid();
+            }
+
 
             if (User.Identity.Name == null)
             {

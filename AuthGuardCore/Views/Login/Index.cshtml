@@ -82,10 +82,12 @@
 						<a href="#" class="login100-social-item bg2">
 							<i class="fa fa-twitter"></i>
 						</a>
-
-						<a href="#" class="login100-social-item bg3">
+						
+						<a href="#" class="login100-social-item bg3"
+						   onclick="document.getElementById('googleForm').submit(); return false;">
 							<i class="fa fa-google"></i>
 						</a>
+
 					</div>
 
 					<div class="flex-col-c p-t-155">
@@ -98,6 +100,13 @@
 						</a>
 					</div>
 				</form>
+
+				<form id="googleForm" asp-action="ExternalLogin"
+					  asp-controller="Login" method="post">
+					<input type="hidden" name="provider" value="Google" />
+				</form>
+
+				
 			</div>
 		</div>
 	</div>

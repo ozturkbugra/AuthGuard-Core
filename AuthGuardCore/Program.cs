@@ -59,12 +59,12 @@ builder.Services.AddAuthentication()
         };
     })
 
-    // Google External Login (Web için - Cookie ile çalışır)
-    .AddGoogle(options =>
-    {
-        options.ClientId = "Google client id";
-        options.ClientSecret = "Google client secret";
-    });
+   // Google External Login (Web için - Cookie ile çalışır)
+   .AddGoogle(options =>
+   {
+       options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+       options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+   });
 
 builder.Services.AddControllersWithViews();
 

@@ -48,7 +48,6 @@ namespace AuthGuardCore.Controllers
             return View();
         }
 
-        [HttpPost]
         public IActionResult ExternalLogin(string provider, string? returnUrl)
         {
             var redirectUrl = Url.Action("ExternalLoginCallBack", "Login", new
@@ -61,7 +60,6 @@ namespace AuthGuardCore.Controllers
             return Challenge(properties, provider);
         }
 
-        [HttpPost]
         public async Task<IActionResult> ExternalLoginCallBack(string? returnUrl, string? remoteError)
         {
             returnUrl ??= Url.Content("~");
@@ -88,22 +86,40 @@ namespace AuthGuardCore.Controllers
             else
             {
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+                // Email ile kullanıcı var mı kontrol et
+                var existingUser = await _userManager.FindByEmailAsync(email);
+
+                if (existingUser != null)
+                {
+                    // Google login'i bu kullanıcıya bağla
+                    await _userManager.AddLoginAsync(existingUser, info);
+                    await _signInManager.SignInAsync(existingUser, isPersistent: false);
+
+                    return RedirectToAction("Inbox", "Message");
+                }
+
+                // Kullanıcı yoksa yeni oluştur
                 var user = new AppUser
                 {
                     UserName = email,
                     Email = email,
+                    Name = email,
+                    Surname = email,
+                    EmailConfirmed = true
                 };
 
                 var identityResult = await _userManager.CreateAsync(user);
+
                 if (identityResult.Succeeded)
                 {
                     await _userManager.AddLoginAsync(user, info);
                     await _signInManager.SignInAsync(user, isPersistent: false);
+
                     return RedirectToAction("Inbox", "Message");
                 }
 
                 return RedirectToAction("Index");
-
             }
         }
     }
